@@ -18,7 +18,7 @@ class StudentsController extends Controller {
         $offset = ($page - 1) * $perPage;
 
         // Handle new student insert
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['search'])) {
             $last_name  = $_POST['last_name'] ?? '';
             $first_name = $_POST['first_name'] ?? '';
             $email      = $_POST['email'] ?? '';
@@ -28,9 +28,15 @@ class StudentsController extends Controller {
             $stmt->execute([$last_name, $first_name, $email]);
         }
 
-        // Get paginated students using the model
-        $students = $this->StudentsModel->get_paginated($perPage, $offset);
-        $totalStudents = $this->StudentsModel->count_all();
+        // Handle search
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        if ($search !== '') {
+            $students = $this->StudentsModel->search_students($search, $perPage, $offset);
+            $totalStudents = $this->StudentsModel->count_search($search);
+        } else {
+            $students = $this->StudentsModel->get_paginated($perPage, $offset);
+            $totalStudents = $this->StudentsModel->count_all();
+        }
         $totalPages = ceil($totalStudents / $perPage);
 
         require __DIR__ . '/../views/students_view.php';
