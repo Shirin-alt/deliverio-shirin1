@@ -238,6 +238,11 @@
         <input type="email" name="email" placeholder="Email" required>
         <button type="submit">Add Student</button>
     </form>
+    <!-- Search Form -->
+    <form class="search-form" method="GET" action="" style="display:flex;justify-content:center;gap:12px;margin-bottom:18px;flex-wrap:wrap;">
+        <input type="text" name="search" value="<?= isset($search) ? htmlspecialchars($search) : '' ?>" placeholder="Search students..." style="padding:10px 14px;border:1.5px solid #e0c9a6;border-radius:8px;font-size:1rem;background:#f7f2ec;color:#4e3b2c;min-width:220px;">
+        <button type="submit" style="background:linear-gradient(90deg,#a68a64 0%,#c9b29b 100%);color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:1rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(120,90,60,0.08);transition:background 0.2s;">Search</button>
+    </form>
     <h2>All Students</h2>
     <table>
         <tr>
