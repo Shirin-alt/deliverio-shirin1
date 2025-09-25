@@ -118,33 +118,61 @@
         .pagination {
             display: flex;
             justify-content: center;
+            align-items: center; /* Vertical centering for arrows/numbers */
             gap: 6px;
             margin-top: 18px;
         }
         .pagination a, .pagination span {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 8px 12px; /* Adjusted for arrows */
             border-radius: 8px;
             font-weight: 500;
             font-size: 1rem;
             color: #a68a64;
             background: #f7f2ec;
             text-decoration: none;
-            transition: background 0.2s, color 0.2s;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            border: 1px solid #e0c9a6; /* Matches your input borders */
+            min-width: 32px; /* Even sizing */
+            text-align: center;
         }
-        .pagination a:hover {
+        .pagination a:hover:not(.disabled) {
             background: #a68a64;
             color: #fff;
+            box-shadow: 0 2px 8px rgba(120, 90, 60, 0.10); /* Hover lift like table rows */
         }
-        .pagination span {
+        .pagination .current {
             background: #a68a64;
             color: #fff;
+            font-weight: 600; /* Bolder active page */
+            border-color: #7c5e3c; /* Darker border */
+        }
+        .pagination .disabled {
+            color: #c9b29b; /* Muted tan */
+            background: #f7f2ec;
+            border-color: #e0c9a6;
+            cursor: not-allowed;
+            pointer-events: none;
+            opacity: 0.6; /* Faded inactive state */
+        }
+        .pagination .first-page, .pagination .last-page {
+            padding: 8px 10px; /* Compact for double arrows */
+            font-size: 0.95rem;
+        }
+        .pagination .prev-page, .pagination .next-page {
+            padding: 8px 10px;
+            font-size: 0.95rem;
+        }
+        .pagination .page-link {
+            padding: 8px 12px;
+            min-width: 36px; /* Square for numbers */
         }
         .page-info {
             text-align: center;
             color: #a68a64;
             margin-top: 6px;
             font-size: 0.98rem;
+            font-style: italic; /* Subtle elegance */
         }
         /* Modal styles */
         .modal {
@@ -264,16 +292,32 @@
         </tr>
         <?php endforeach; ?>
     </table>
-    <!-- Pagination Controls -->
+    <!-- Enhanced Pagination Controls -->
     <?php if (isset($totalPages) && $totalPages > 1): ?>
     <div class="pagination">
+        <?php if ($page > 1): ?>
+            <a href="?page=1<?= isset($search) ? '&search=' . urlencode($search) : '' ?>" class="first-page" title="First Page">&laquo;&laquo; First</a>
+            <a href="?page=<?= $page - 1 ?><?= isset($search) ? '&search=' . urlencode($search) : '' ?>" class="prev-page" title="Previous Page">&lsaquo; Previous</a>
+        <?php else: ?>
+            <span class="disabled">&laquo;&laquo; First</span>
+            <span class="disabled">&lsaquo; Previous</span>
+        <?php endif; ?>
+
         <?php for ($i = 1; $i <= $totalPages; $i++): ?>
             <?php if ($i == $page): ?>
-                <span><?= $i ?></span>
+                <span class="current"><?= $i ?></span>
             <?php else: ?>
-                <a href="?page=<?= $i ?>"><?= $i ?></a>
+                <a href="?page=<?= $i ?><?= isset($search) ? '&search=' . urlencode($search) : '' ?>" class="page-link"><?= $i ?></a>
             <?php endif; ?>
         <?php endfor; ?>
+
+        <?php if ($page < $totalPages): ?>
+            <a href="?page=<?= $page + 1 ?><?= isset($search) ? '&search=' . urlencode($search) : '' ?>" class="next-page" title="Next Page">Next &rsaquo;</a>
+            <a href="?page=<?= $totalPages ?><?= isset($search) ? '&search=' . urlencode($search) : '' ?>" class="last-page" title="Last Page">Last &raquo;&raquo;</a>
+        <?php else: ?>
+            <span class="disabled">Next &rsaquo;</span>
+            <span class="disabled">Last &raquo;&raquo;</span>
+        <?php endif; ?>
     </div>
     <div class="page-info">Page <?= $page ?> of <?= $totalPages ?></div>
     <?php endif; ?>
@@ -317,4 +361,3 @@ window.onclick = function(event) {
 </script>
 </body>
 </html>
-
