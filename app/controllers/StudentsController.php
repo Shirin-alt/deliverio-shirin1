@@ -7,12 +7,13 @@ class StudentsController extends Controller {
     public function __construct()
     {
         parent::__construct();
-    $this->db = Database::instance('main');
+        $this->db = Database::instance('main');
     }
 
     // Show students and handle new inserts (with pagination)
     public function show_form()
     {
+        require_login();
         $perPage = 3;
         $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
         $offset = ($page - 1) * $perPage;
@@ -45,6 +46,7 @@ class StudentsController extends Controller {
     // Update existing student
     public function update_student()
     {
+        require_login();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id         = isset($_POST['id']) ? (int) $_POST['id'] : 0;
             $last_name  = $_POST['last_name'] ?? '';
@@ -70,6 +72,7 @@ class StudentsController extends Controller {
     // Delete student
     public function delete_student()
     {
+        require_login();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 
