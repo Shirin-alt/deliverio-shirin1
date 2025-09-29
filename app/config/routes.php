@@ -55,3 +55,6 @@ $router ->post('/students', 'StudentsController::show_form');
 $router->post('/students/update', 'StudentsController::update_student');
 $router->post('/students/delete', 'StudentsController::delete_student');
 
+$router->get('/login',  'LoginController::show_form');      // show login page
+$router->post('/login', 'LoginController::authenticate');   // handle form submit
+$router->get('/logout', 'LoginController::logout');  
