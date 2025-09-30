@@ -1,10 +1,13 @@
 <?php
+session_start();
 define('PREVENT_DIRECT_ACCESS', TRUE);
 /**
  * ------------------------------------------------------------------
  * LavaLust - an opensource lightweight PHP MVC Framework
  * ------------------------------------------------------------------
  *
+ * 
+ * 
  * MIT License
  * 
  * Copyright (c) 2020 Ronald M. Marasigan
@@ -45,6 +48,10 @@ define('PREVENT_DIRECT_ACCESS', TRUE);
  * 
  * NO TRAILING SLASH!
  */
+
+ 
+
+ 
 	$system_path 			= 'scheme';
 
 /*
