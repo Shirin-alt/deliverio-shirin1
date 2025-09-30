@@ -1,7 +1,9 @@
+<?php
+defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
+
 if (!function_exists('redirect')) {
-    function redirect($uri = '', $permanent = false, $exit = true)
-    {
-        if (!preg_match('#^(\w+:)?//#i', $uri)) {
+    function redirect($uri = '', $permanent = false, $exit = true) {
+        if (!preg_match('#^(\\w+:)?//#i', $uri)) {
             $uri = $uri;
         }
         if (headers_sent() === false) {
@@ -10,8 +12,6 @@ if (!function_exists('redirect')) {
         if ($exit === true) exit();
     }
 }
-<?php
-defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 
 function is_logged_in() {
     return isset($_SESSION['user_id']);
