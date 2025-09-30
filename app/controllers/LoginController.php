@@ -16,7 +16,7 @@ class LoginController extends Controller {
         $password = $_POST['password'] ?? '';
 
         // Query the user
-        $user = $this->db->table('users')->where('username', $username)->first();
+            $user = $this->db->table('users')->where('username', $username)->get();
 
         if ($user && password_verify($password, $user->password_hash)) {
             // store in session
