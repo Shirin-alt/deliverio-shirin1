@@ -9,9 +9,20 @@ class AuthController extends Controller
         if ($this->io->method() == 'post') {
             $username = $this->io->post('username');
             $password = $this->io->post('password');
-            $role     = $this->io->post('role') ?? 'user';
+
+            // By default, public registrations get role 'user'.
+            // Only an already-logged-in admin may create other roles.
+            $role = 'user';
+            if ($auth->is_logged_in() && $auth->has_role('admin')) {
+                // Allow admin to specify a role when creating accounts via POST role field.
+                $role = $this->io->post('role') ?? 'user';
+            }
 
             if ($auth->register($username, $password, $role)) {
+                // If admin created the account, return to admin panel, else send user to login.
+                if ($auth->is_logged_in() && $auth->has_role('admin')) {
+                    redirect('auth/admin_dashboard');
+                }
                 redirect('auth/login');
             } else {
                 echo "Registration failed!";

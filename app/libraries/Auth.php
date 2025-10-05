@@ -51,6 +51,13 @@ class Auth
                          ->where('username', $username)
                          ->get();
 
+        // Prepare log file
+        $logDir = ROOT_DIR . 'runtime' . DIRECTORY_SEPARATOR . 'logs';
+        if (!is_dir($logDir)) {
+            @mkdir($logDir, 0755, true);
+        }
+        $logFile = $logDir . DIRECTORY_SEPARATOR . 'auth_debug.log';
+
         // Support either 'password' or 'password_hash' column names (some installs use one or the other)
         $storedHash = null;
         if (is_array($user)) {
@@ -61,13 +68,23 @@ class Auth
             }
         }
 
-        if ($user && $storedHash && password_verify($password, $storedHash)) {
+        $verify = false;
+        if ($user && $storedHash) {
+            $verify = password_verify($password, $storedHash);
+        }
+
+        // Log attempt
+        $logEntry = date('c') . " - LOGIN ATTEMPT: username={$username} found=" . ($user ? 'yes' : 'no') . " has_hash=" . ($storedHash ? 'yes' : 'no') . " verify=" . ($verify ? 'true' : 'false') . PHP_EOL;
+        @file_put_contents($logFile, $logEntry, FILE_APPEND);
+
+        if ($verify) {
             $this->session->set_userdata([
                 'user_id'   => $user['id'],
                 'username'  => $user['username'],
                 'role'      => $user['role'],
                 'logged_in' => true
             ]);
+            @file_put_contents($logFile, date('c') . " - LOGIN SUCCESS: username={$username} user_id={$user['id']}" . PHP_EOL, FILE_APPEND);
             return true;
         }
         return false;
