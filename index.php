@@ -1,5 +1,4 @@
 <?php
-session_start();
 define('PREVENT_DIRECT_ACCESS', TRUE);
 /**
  * ------------------------------------------------------------------
