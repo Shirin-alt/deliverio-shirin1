@@ -15,13 +15,11 @@ class LoginController extends Controller {
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';
 
-        // Query the user
-            $user = $this->db->table('users')->where('username', $username)->get();
+        // Use the Auth library (handles password column name differences)
+        $this->call->library('auth');
+        $auth = load_class('auth', 'libraries');
 
-        if ($user && password_verify($password, $user['password_hash'])) {
-            // store in session
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['role']    = $user['role'];
+        if ($auth->login($username, $password)) {
             redirect('/students');
         } else {
             echo "Invalid login";

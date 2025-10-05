@@ -32,7 +32,17 @@ class Auth
                          ->where('username', $username)
                          ->get();
 
-        if ($user && password_verify($password, $user['password'])) {
+        // Support either 'password' or 'password_hash' column names (some installs use one or the other)
+        $storedHash = null;
+        if (is_array($user)) {
+            if (array_key_exists('password', $user)) {
+                $storedHash = $user['password'];
+            } elseif (array_key_exists('password_hash', $user)) {
+                $storedHash = $user['password_hash'];
+            }
+        }
+
+        if ($user && $storedHash && password_verify($password, $storedHash)) {
             $this->session->set_userdata([
                 'user_id'   => $user['id'],
                 'username'  => $user['username'],
