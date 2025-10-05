@@ -6,7 +6,9 @@ class RegisterController extends Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->auth = new Auth();
+        // Properly load the Auth library via the framework invoker
+        $this->call->library('auth');
+        $this->auth = load_class('auth', 'libraries');
     }
 
     public function show_form() {
