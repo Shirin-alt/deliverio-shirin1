@@ -25,7 +25,24 @@ class Auth
             'created_at'    => date('Y-m-d H:i:s')
         ];
 
-        return $this->db->table('users')->insert($data);
+        // Debug logging helper
+        $logDir = ROOT_DIR . 'runtime' . DIRECTORY_SEPARATOR . 'logs';
+        if (!is_dir($logDir)) {
+            @mkdir($logDir, 0755, true);
+        }
+        $logFile = $logDir . DIRECTORY_SEPARATOR . 'auth_debug.log';
+
+        // Attempt insert and log result/exception for debugging when registration does not persist
+        try {
+            $result = $this->db->table('users')->insert($data);
+            $msg = date('c') . " - REGISTER SUCCESS: username={$username} id_or_rowcount=" . var_export($result, true) . PHP_EOL;
+            @file_put_contents($logFile, $msg, FILE_APPEND);
+            return $result;
+        } catch (Exception $e) {
+            $err = date('c') . " - REGISTER FAILED: username={$username} data=" . json_encode($data) . " error=" . $e->getMessage() . PHP_EOL;
+            @file_put_contents($logFile, $err, FILE_APPEND);
+            return false;
+        }
     }
 
     public function login($username, $password)
