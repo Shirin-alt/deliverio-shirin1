@@ -17,13 +17,15 @@ class Auth
     public function register($username, $password, $role = 'user')
     {
         $hash = password_hash($password, PASSWORD_DEFAULT);
+        // Insert using the 'password_hash' column (your DB uses this schema)
+        $data = [
+            'username'      => $username,
+            'password_hash' => $hash,
+            'role'          => $role,
+            'created_at'    => date('Y-m-d H:i:s')
+        ];
 
-        return $this->db->table('users')->insert([
-            'username'   => $username,
-            'password'   => $hash,
-            'role'       => $role,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
+        return $this->db->table('users')->insert($data);
     }
 
     public function login($username, $password)
