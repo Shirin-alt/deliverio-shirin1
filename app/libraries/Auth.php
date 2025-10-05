@@ -27,7 +27,8 @@ class Auth
         $hash = password_hash($password, PASSWORD_DEFAULT);
         return $this->db->table('users')->insert([
             'username' => $username,
-            'password_hash' => $hash,
+            // docs expect a `password` column containing the hashed password
+            'password' => $hash,
             'role' => $role,
             'created_at' => date('Y-m-d H:i:s')
         ]);
@@ -42,7 +43,8 @@ class Auth
                          ->where('username', $username)
                          ->get();
 
-        if ($user && password_verify($password, $user['password_hash'] ?? $user['password'])) {
+        // docs use `password` column for the hashed password
+        if ($user && password_verify($password, $user['password'] ?? null)) {
             $this->session->set_userdata([
                 'user_id' => $user['id'],
                 'username' => $user['username'],

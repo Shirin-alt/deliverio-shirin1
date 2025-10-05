@@ -64,3 +64,11 @@ $router->get('/logout', 'LoginController::logout');
 // Registration
 $router->get('/register', 'RegisterController::show_form');
 $router->post('/register/submit', 'RegisterController::submit');
+
+// AuthController routes
+$router->get('/auth/register', 'AuthController::register');
+$router->post('/auth/register', 'AuthController::register');
+$router->get('/auth/login', 'AuthController::login');
+$router->post('/auth/login', 'AuthController::login');
+$router->get('/auth/dashboard', 'AuthController::dashboard');
+$router->get('/auth/logout', 'AuthController::logout');
