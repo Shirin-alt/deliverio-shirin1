@@ -43,6 +43,8 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 |
 */
 $router ->get('/profile/{fname}/{lname}', 'WelcomeSCD::profile');
+// Default landing page -> registration
+$router->get('/', 'AuthController::register');
 $router ->get('/get-all', 'StudentsController::get_all');
 $router->get('/create', 'StudentsController::create');
 $router ->get('/update', 'StudentsController::update');
@@ -72,3 +74,6 @@ $router->get('/auth/login', 'AuthController::login');
 $router->post('/auth/login', 'AuthController::login');
 $router->get('/auth/dashboard', 'AuthController::dashboard');
 $router->get('/auth/logout', 'AuthController::logout');
+
+// Debug
+$router->get('/debug/session', 'DebugController::session');
